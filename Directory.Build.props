@@ -9,7 +9,7 @@
 
     <Company>Ku</Company>
     <Authors>Ku</Authors>
-    <RepositoryUrl>https://github.com/ku/ku-dotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/project-kgo/ku-dotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Ku.Utils</AssemblyName>
+    <RootNamespace>Ku.Utils</RootNamespace>
+    <PackageId>Ku.Utils</PackageId>
+    <Description>Ku.Utils 是一个基于 .NET 10 的通用工具库。</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>

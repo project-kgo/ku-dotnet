@@ -84,7 +84,22 @@ public static class PostgreSqlDataSourceFactory
             throw new ArgumentException("连接池最小连接数不能大于最大连接数。", nameof(options));
         }
 
-        return builder.ConnectionString;
+        return BuildStableConnectionString(builder);
+    }
+
+    private static string BuildStableConnectionString(NpgsqlConnectionStringBuilder builder)
+    {
+        var stableBuilder = new NpgsqlConnectionStringBuilder();
+        var keys = builder.Keys
+            .Cast<string>()
+            .Order(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var key in keys)
+        {
+            stableBuilder[key] = builder[key];
+        }
+
+        return stableBuilder.ConnectionString;
     }
 
     private static int ValidateNonNegative(int value, string argumentName)

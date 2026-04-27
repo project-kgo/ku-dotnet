@@ -8,7 +8,8 @@ namespace Ku.Utils.Database.Redis;
 /// </summary>
 public static class RedisConnectionFactory
 {
-    private static readonly ConcurrentDictionary<string, Lazy<IConnectionMultiplexer>> Connections = new(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<string, IConnectionMultiplexer> Connections = new(StringComparer.Ordinal);
+    private static readonly Lock _syncRoot = new();
 
     internal static Func<string, IConnectionMultiplexer> ConnectionFactory { get; set; } = static connectionString => ConnectionMultiplexer.Connect(connectionString);
 
@@ -23,11 +24,23 @@ public static class RedisConnectionFactory
 
         var configuration = BuildConfiguration(options);
 
-        return Connections.GetOrAdd(
-            configuration.CacheKey,
-            _ => new Lazy<IConnectionMultiplexer>(
-                () => ConnectionFactory(configuration.ConnectionString),
-                LazyThreadSafetyMode.ExecutionAndPublication)).Value;
+        if (Connections.TryGetValue(configuration.CacheKey, out var connection))
+        {
+            return connection;
+        }
+
+        lock (_syncRoot)
+        {
+            if (Connections.TryGetValue(configuration.CacheKey, out connection))
+            {
+                return connection;
+            }
+
+            connection = ConnectionFactory(configuration.ConnectionString);
+            Connections[configuration.CacheKey] = connection;
+
+            return connection;
+        }
     }
 
     internal static string BuildConfigurationString(RedisConnectionOptions options)

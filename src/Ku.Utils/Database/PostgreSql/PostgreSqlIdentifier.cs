@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Ku.Utils.Snowflake;
+namespace Ku.Utils.Database.PostgreSql;
 
 internal static partial class PostgreSqlIdentifier
 {
